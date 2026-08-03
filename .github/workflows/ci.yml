@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-package:
+    runs-on: macos-15
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Show Swift version
+        run: swift --version
+
+      - name: Run tests
+        run: ./scripts/test.sh -Xswiftc -strict-concurrency=complete -Xswiftc -warnings-as-errors
+
+      - name: Build app bundle
+        run: ./scripts/build-app.sh
+
+      - name: Verify package
+        run: |
+          test -x dist/SnapText.app/Contents/MacOS/SnapText
+          test -f dist/SnapText.app/Contents/Info.plist
+          test -n "$(find dist -maxdepth 1 -name 'SnapText-*.zip' -print -quit)"
+          codesign --verify --strict dist/SnapText.app
+
+      - name: Upload app archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: SnapText-development-macOS-${{ runner.arch }}
+          path: dist/SnapText-*.zip
+          if-no-files-found: error
