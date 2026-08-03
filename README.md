@@ -28,6 +28,8 @@ Each processed screenshot makes a Together API request and can incur usage charg
 
 ## Build from source
 
+For agent-assisted setup, give your agent [AGENTS.md](AGENTS.md). It provides step-by-step preflight, build, user-local installation, Keychain, consent, update, rollback, and uninstall instructions. Keep the API key out of ordinary agent chat; the guide has the agent pause at SnapText's masked key field for user entry.
+
 ```sh
 git clone https://github.com/Sohailm25/screenie.git
 cd screenie
