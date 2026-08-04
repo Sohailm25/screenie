@@ -1,7 +1,7 @@
 import AppKit
 
 @main
-enum SnapTextApplication {
+enum ScreenieApplication {
     @MainActor
     static func main() {
         let application = NSApplication.shared

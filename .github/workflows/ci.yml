@@ -27,14 +27,21 @@ jobs:
 
       - name: Verify package
         run: |
-          test -x dist/SnapText.app/Contents/MacOS/SnapText
-          test -f dist/SnapText.app/Contents/Info.plist
-          test -n "$(find dist -maxdepth 1 -name 'SnapText-*.zip' -print -quit)"
-          codesign --verify --strict dist/SnapText.app
+          test -x dist/Screenie.app/Contents/MacOS/Screenie
+          test -f dist/Screenie.app/Contents/Info.plist
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleDisplayName' dist/Screenie.app/Contents/Info.plist)" = "Screenie"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleName' dist/Screenie.app/Contents/Info.plist)" = "Screenie"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' dist/Screenie.app/Contents/Info.plist)" = "Screenie"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' dist/Screenie.app/Contents/Info.plist)" = "com.sohailmohammad.SnapText"
+          test ! -e dist/SnapText.app
+          archive="$(find dist -maxdepth 1 -name 'Screenie-*.zip' -print -quit)"
+          test -n "$archive"
+          unzip -tq "$archive"
+          codesign --verify --strict dist/Screenie.app
 
       - name: Upload app archive
         uses: actions/upload-artifact@v7
         with:
-          name: SnapText-development-macOS-${{ runner.arch }}
-          path: dist/SnapText-*.zip
+          name: Screenie-development-macOS-${{ runner.arch }}
+          path: dist/Screenie-*.zip
           if-no-files-found: error

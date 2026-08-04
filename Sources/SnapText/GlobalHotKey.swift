@@ -9,13 +9,13 @@ enum GlobalHotKeyError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case let .handlerInstallationFailed(status):
-            return "SnapText could not install its keyboard shortcut handler (macOS error \(status))."
+            return "Screenie could not install its keyboard shortcut handler (macOS error \(status))."
         case let .registrationFailed(status) where status == eventHotKeyExistsErr:
-            return "Command-Option-4 is already reserved by another app. Use the SnapText menu or quit the conflicting app."
+            return "Command-Option-4 is already reserved by another app. Use the Screenie menu or quit the conflicting app."
         case let .registrationFailed(status):
-            return "SnapText could not register Command-Option-4 (macOS error \(status))."
+            return "Screenie could not register Command-Option-4 (macOS error \(status))."
         case .systemShortcutConflict:
-            return "Command-Option-4 is assigned to a macOS system shortcut. Change that shortcut in System Settings or use the SnapText menu."
+            return "Command-Option-4 is assigned to a macOS system shortcut. Change that shortcut in System Settings or use the Screenie menu."
         }
     }
 }

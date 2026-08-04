@@ -3,12 +3,12 @@
 import PackageDescription
 
 let package = Package(
-    name: "SnapText",
+    name: "Screenie",
     platforms: [
         .macOS(.v13)
     ],
     products: [
-        .executable(name: "SnapText", targets: ["SnapText"])
+        .executable(name: "Screenie", targets: ["SnapText"])
     ],
     targets: [
         .executableTarget(

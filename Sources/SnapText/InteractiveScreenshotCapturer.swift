@@ -17,7 +17,7 @@ enum InteractiveScreenshotCaptureError: LocalizedError, Equatable {
     var errorDescription: String? {
         switch self {
         case let .destinationAlreadyExists(url):
-            return "SnapText will not overwrite the existing file at \(url.path)."
+            return "Screenie will not overwrite the existing file at \(url.path)."
         case let .destinationFolderUnavailable(url):
             return "The screenshot folder is unavailable: \(url.path)"
         case let .captureCommandFailed(status):
@@ -25,9 +25,9 @@ enum InteractiveScreenshotCaptureError: LocalizedError, Equatable {
         case .invalidCaptureOutput:
             return "Apple’s screenshot tool produced an invalid output file."
         case let .unableToCreatePrivateWorkspace(url):
-            return "SnapText could not create a private capture workspace in \(url.path)."
+            return "Screenie could not create a private capture workspace in \(url.path)."
         case let .unableToCreateUniqueDestination(url):
-            return "SnapText could not choose a unique screenshot name in \(url.path)."
+            return "Screenie could not choose a unique screenshot name in \(url.path)."
         }
     }
 }
@@ -44,7 +44,7 @@ struct ScreenshotCaptureWorkspace: Sendable {
         fileManager: FileManager = .default
     ) throws -> ScreenshotCaptureWorkspace {
         let directoryURL = folderURL.appendingPathComponent(
-            ".snaptext-capture-\(identifier.uuidString)",
+            ".screenie-capture-\(identifier.uuidString)",
             isDirectory: true
         )
         do {
@@ -237,7 +237,7 @@ enum ScreenshotCaptureDestination {
 
         for _ in 0..<32 {
             let identifier = identifierProvider().uuidString
-            let filename = "SnapText \(timestamp) \(identifier).png"
+            let filename = "Screenie \(timestamp) \(identifier).png"
             let candidate = folderURL.appendingPathComponent(filename, isDirectory: false)
             guard !InteractiveScreenshotCapturer.pathExistsWithoutFollowingSymbolicLinks(candidate)
             else { continue }

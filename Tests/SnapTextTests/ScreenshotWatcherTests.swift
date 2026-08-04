@@ -325,7 +325,7 @@ struct ScreenshotWatcherTests {
         }
 
         let stagingDirectory = directory.appendingPathComponent(
-            ".snaptext-stage",
+            ".screenie-stage",
             isDirectory: true
         )
         try FileManager.default.createDirectory(
@@ -338,7 +338,7 @@ struct ScreenshotWatcherTests {
         try markAsAppleCapture(stagedURL, type: "selection")
         let identity = try #require(ScreenshotFileIdentity.regularFile(at: stagedURL))
 
-        let publishedURL = directory.appendingPathComponent("SnapText capture.png")
+        let publishedURL = directory.appendingPathComponent("Screenie capture.png")
         watcher.ignoreNextAppearance(of: identity, at: publishedURL)
         try FileManager.default.moveItem(at: stagedURL, to: publishedURL)
         watcher.finishIgnoredAppearance(
@@ -381,7 +381,7 @@ struct ScreenshotWatcherTests {
         let expectedIdentity = try #require(
             ScreenshotFileIdentity.regularFile(at: expectedURL)
         )
-        let publishedURL = directory.appendingPathComponent("SnapText replaced capture.png")
+        let publishedURL = directory.appendingPathComponent("Screenie replaced capture.png")
         watcher.ignoreNextAppearance(of: expectedIdentity, at: publishedURL)
 
         try pngData().write(to: publishedURL)

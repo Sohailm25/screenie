@@ -68,7 +68,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func configureStatusItem() {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-        updateStatusIcon(symbol: "text.viewfinder", description: "SnapText")
+        updateStatusIcon(symbol: "text.viewfinder", description: "Screenie")
 
         let menu = NSMenu()
         let instructionItem = NSMenuItem(
@@ -111,7 +111,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(.separator())
 
         monitoringMenuItem = NSMenuItem(
-            title: "Enable SnapText",
+            title: "Enable Screenie",
             action: #selector(toggleMonitoring),
             keyEquivalent: ""
         )
@@ -178,7 +178,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(.separator())
 
         let quitItem = NSMenuItem(
-            title: "Quit SnapText",
+            title: "Quit Screenie",
             action: #selector(NSApplication.terminate(_:)),
             keyEquivalent: "q"
         )
@@ -223,7 +223,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             preferences.monitoringEnabled = true
             captureMenuItem.isEnabled = true
             registerCaptureShortcut(showAlertOnFailure: showAlertOnFailure)
-            monitoringMenuItem.title = "Pause SnapText"
+            monitoringMenuItem.title = "Pause Screenie"
             statusMenuItem.title = "Watching \(displayPath(folderURL))"
             updateStatusIcon(symbol: "text.viewfinder", description: "Watching for selection screenshots")
         } catch {
@@ -252,9 +252,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private func showPausedState() {
         hotKeyController.unregister()
         captureMenuItem?.isEnabled = false
-        monitoringMenuItem?.title = "Enable SnapText"
-        statusMenuItem?.title = "SnapText paused"
-        updateStatusIcon(symbol: "pause.circle", description: "SnapText paused")
+        monitoringMenuItem?.title = "Enable Screenie"
+        statusMenuItem?.title = "Screenie paused"
+        updateStatusIcon(symbol: "pause.circle", description: "Screenie paused")
     }
 
     private func monitoringFailed(_ error: Error, generation: UInt64) {
@@ -543,8 +543,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func showScreenCaptureAccessRequired() {
         let alert = NSAlert()
-        alert.messageText = "Allow Screen Recording for SnapText"
-        alert.informativeText = "macOS requires Screen Recording access before SnapText can open Apple’s region selector. Grant access in Privacy & Security, then reopen SnapText if macOS asks you to."
+        alert.messageText = "Allow Screen Recording for Screenie"
+        alert.informativeText = "macOS requires Screen Recording access before Screenie can open Apple’s region selector. Grant access in Privacy & Security, then reopen Screenie if macOS asks you to."
         alert.alertStyle = .warning
         alert.addButton(withTitle: "Open System Settings")
         alert.addButton(withTitle: "Cancel")
@@ -563,7 +563,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private func showCaptureChangedClipboardState() {
         statusMenuItem.title = "Clipboard changed during capture; no cloud request"
         updateStatusIcon(symbol: "doc.on.clipboard", description: "Capture changed clipboard")
-        hud.showSuccess("The clipboard changed while Apple’s selector was open. SnapText sent no image to Together.")
+        hud.showSuccess("The clipboard changed while Apple’s selector was open. Screenie sent no image to Together.")
     }
 
     private func showCaptureCancelledState() {
@@ -599,7 +599,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let panel = NSOpenPanel()
         panel.title = "Choose the macOS screenshot folder"
         panel.prompt = "Watch Folder"
-        panel.message = "SnapText saves ⌘⌥4 captures here. While enabled, it also watches this folder for new Apple selection screenshots."
+        panel.message = "Screenie saves ⌘⌥4 captures here. While enabled, it also watches this folder for new Apple selection screenshots."
         panel.canChooseFiles = false
         panel.canChooseDirectories = true
         panel.allowsMultipleSelection = false
@@ -619,8 +619,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 watchedFolderURL = nil
                 folderAccess.stopAccessing()
                 showPausedState()
-                statusMenuItem.title = "Folder saved; SnapText paused"
-                hud.showSuccess("Folder saved. Enable SnapText when ready.")
+                statusMenuItem.title = "Folder saved; Screenie paused"
+                hud.showSuccess("Folder saved. Enable Screenie when ready.")
             }
         } catch {
             showAlert(title: "Could not use that folder", message: error.localizedDescription)
@@ -638,8 +638,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             watchedFolderURL = nil
             folderAccess.stopAccessing()
             showPausedState()
-            statusMenuItem.title = "System folder selected; SnapText paused"
-            hud.showSuccess("System screenshot folder selected. Enable SnapText when ready.")
+            statusMenuItem.title = "System folder selected; Screenie paused"
+            hud.showSuccess("System screenshot folder selected. Enable Screenie when ready.")
         }
     }
 
@@ -719,7 +719,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         if source.consumesRequestQuota && !automaticRequestLimiter.accept() {
             statusMenuItem.title = "Capture request limit reached"
             hud.showError(
-                "SnapText reached its safety cap of \(AppConfiguration.maximumAutomaticRequestsPerWindow) capture requests in \(AppConfiguration.automaticRequestWindowSeconds) seconds. The screenshot was saved. Use Process Latest Screenshot for an explicit retry."
+                "Screenie reached its safety cap of \(AppConfiguration.maximumAutomaticRequestsPerWindow) capture requests in \(AppConfiguration.automaticRequestWindowSeconds) seconds. The screenshot was saved. Use Process Latest Screenshot for an explicit retry."
             )
             completeShortcutCaptureOperation(
                 ifMatching: currentOperationID,
@@ -820,7 +820,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     ) {
         let message = shortMessage(for: error)
         statusMenuItem.title = message
-        updateStatusIcon(symbol: "exclamationmark.triangle", description: "SnapText error")
+        updateStatusIcon(symbol: "exclamationmark.triangle", description: "Screenie error")
         hud.showError(message)
         if let operationID, operationID == self.operationID {
             processingTask = nil
@@ -866,7 +866,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     @objc private func removeAPIKey() {
         let alert = NSAlert()
         alert.messageText = "Remove the Together API key?"
-        alert.informativeText = "SnapText will stop sending screenshots until you save another key."
+        alert.informativeText = "Screenie will stop sending screenshots until you save another key."
         alert.alertStyle = .warning
         alert.addButton(withTitle: "Remove")
         alert.addButton(withTitle: "Cancel")
@@ -897,7 +897,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private func promptForAPIKey() {
         let alert = NSAlert()
         alert.messageText = "Together API key"
-        alert.informativeText = "SnapText stores the key in macOS Keychain. It is sent only to api.together.xyz."
+        alert.informativeText = "Screenie stores the key in macOS Keychain. It is sent only to api.together.xyz."
         alert.alertStyle = .informational
         alert.addButton(withTitle: "Save")
         alert.addButton(withTitle: "Cancel")
@@ -955,8 +955,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc private func showPrivacy() {
         showAlert(
-            title: "SnapText privacy",
-            message: "Command-Option-4 opens Apple’s region selector. After you finish the selection, SnapText saves the PNG in your configured screenshot folder and sends it to api.together.xyz in an HTTPS request. While enabled, SnapText also sends new files carrying Apple selection-screenshot metadata. Process Latest Screenshot explicitly sends the newest supported image. Images larger than 16 MiB, 64 megapixels, or 16,384 pixels on one side are rejected. SnapText keeps no request history, and the API key is stored in macOS Keychain."
+            title: "Screenie privacy",
+            message: "Command-Option-4 opens Apple’s region selector. After you finish the selection, Screenie saves the PNG in your configured screenshot folder and sends it to api.together.xyz in an HTTPS request. While enabled, Screenie also sends new files carrying Apple selection-screenshot metadata. Process Latest Screenshot explicitly sends the newest supported image. Images larger than 16 MiB, 64 megapixels, or 16,384 pixels on one side are rejected. Screenie keeps no request history, and the API key is stored in macOS Keychain."
         )
     }
 
@@ -988,7 +988,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func cloudUploadDisclosure(for folder: URL) -> String {
-        "While SnapText is enabled, Command-Option-4 opens Apple’s region selector. Finishing a selection saves a PNG in \(displayPath(folder)) and sends it to Together without another confirmation. SnapText also watches that folder and sends new files carrying Apple selection-screenshot metadata, including captures made with Command-Shift-4. Process Latest Screenshot sends the newest supported image even without that metadata. Existing files are ignored by monitoring. Each processed image can incur charges on your Together account."
+        "While Screenie is enabled, Command-Option-4 opens Apple’s region selector. Finishing a selection saves a PNG in \(displayPath(folder)) and sends it to Together without another confirmation. Screenie also watches that folder and sends new files carrying Apple selection-screenshot metadata, including captures made with Command-Shift-4. Process Latest Screenshot sends the newest supported image even without that metadata. Existing files are ignored by monitoring. Each processed image can incur charges on your Together account."
     }
 
     private func configuredFolderForDisclosure() -> URL {
