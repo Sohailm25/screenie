@@ -13,8 +13,9 @@ CONTENTS_DIR="${APP_DIR}/Contents"
 MACOS_DIR="${CONTENTS_DIR}/MacOS"
 RESOURCES_DIR="${CONTENTS_DIR}/Resources"
 INFO_PLIST="${PROJECT_DIR}/Resources/Info.plist"
+LICENSE_FILE="${PROJECT_DIR}/LICENSE"
 
-if [[ ! -f "${PROJECT_DIR}/Package.swift" || ! -f "${INFO_PLIST}" ]]; then
+if [[ ! -f "${PROJECT_DIR}/Package.swift" || ! -f "${INFO_PLIST}" || ! -f "${LICENSE_FILE}" ]]; then
     echo "Run this script from a complete Screenie checkout." >&2
     exit 1
 fi
@@ -44,12 +45,14 @@ fi
 /bin/mkdir -p "${MACOS_DIR}" "${RESOURCES_DIR}"
 /usr/bin/install -m 0755 "${EXECUTABLE}" "${MACOS_DIR}/Screenie"
 /usr/bin/install -m 0644 "${INFO_PLIST}" "${CONTENTS_DIR}/Info.plist"
+/usr/bin/install -m 0644 "${LICENSE_FILE}" "${RESOURCES_DIR}/LICENSE.txt"
+/usr/bin/strip -S "${MACOS_DIR}/Screenie"
 
 if [[ -x /usr/bin/codesign ]]; then
     /usr/bin/codesign --force --sign - --timestamp=none "${APP_DIR}"
 fi
 
-/usr/bin/ditto -c -k --sequesterRsrc --keepParent "${APP_DIR}" "${ZIP_PATH}"
+COPYFILE_DISABLE=1 /usr/bin/ditto -c -k --norsrc --noextattr --keepParent "${APP_DIR}" "${ZIP_PATH}"
 
 echo "Built ${APP_DIR}"
 echo "Created ${ZIP_PATH}"

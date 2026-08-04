@@ -2,6 +2,8 @@
 
 Screenie turns any selected Mac screen region into clean, copy-ready Markdown. It preserves text, tables, code, terminal output, math, and interface structure. Charts and diagrams become ASCII art.
 
+Screenie is an independent open-source project and is not an official Together AI product.
+
 Press <kbd>Command</kbd>+<kbd>Option</kbd>+<kbd>4</kbd>, draw Apple’s normal selection box, and wait for the result on your clipboard.
 
 ## Install
