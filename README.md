@@ -8,7 +8,7 @@ Press <kbd>Command</kbd>+<kbd>Option</kbd>+<kbd>4</kbd>, draw Apple’s normal s
 
 You need macOS 13 or newer, Swift 6, and a [Together AI API key](https://api.together.ai/settings/api-keys).
 
-These commands are for a fresh install. If Screenie or SnapText is already in `~/Applications`, quit it and move it to a backup location first. The [agent guide](AGENTS.md) has guarded update and rollback steps.
+These commands are for a fresh install. If Screenie or SnapText is already in `~/Applications`, quit it and follow the cleanup or update steps in [AGENTS.md](AGENTS.md) first.
 
 ```sh
 git clone https://github.com/Sohailm25/screenie.git
@@ -27,7 +27,7 @@ If `swift` is unavailable, run `xcode-select --install` and try again.
 
 Using an agent? Send it the repository link and ask it to follow [AGENTS.md](AGENTS.md). Enter your API key in Screenie’s masked field, never in agent chat.
 
-Upgrading from SnapText preserves its settings. macOS can ask Screenie to access the existing Keychain item. Approve that prompt. If access was denied and saving the key again fails, follow the [Keychain recovery steps](AGENTS.md#upgrade-from-snaptext), then enter the key through Screenie's menu.
+Screenie has its own macOS permission, preference, and Keychain identity. A SnapText upgrade therefore starts with fresh cloud consent, a fresh API-key entry, and a new Screen Recording approval. The [clean-reinstall steps](AGENTS.md#clean-reinstall-screenie-and-remove-snaptext) remove both app identities without deleting screenshots.
 
 ## First use
 

@@ -101,7 +101,7 @@ SCREENIE_SOURCE_DIR="${HOME}/Developer/screenie"
   "$(/usr/bin/git -C "${SCREENIE_SOURCE_DIR}" rev-parse refs/remotes/origin/main)"
 ```
 
-Continue to section 3 after either a fresh clone or a verified update. Use section 4 when both `${HOME}/Applications/Screenie.app` and the legacy `${HOME}/Applications/SnapText.app` are absent. Use the SnapText upgrade procedure when only the legacy app exists. Use the Screenie update procedure when only Screenie exists. If both bundles exist, stop. They share one identifier, so identify which copy is active and ask the user which app to keep before moving either one.
+Continue to section 3 after either a fresh clone or a verified update. Inspect the bundle identifier of every existing `Screenie.app` or `SnapText.app` before choosing a path. Use section 4 when neither exists. Use **Update an existing install** only when one installed Screenie bundle has identifier `com.sohailmohammad.Screenie`. Use **Clean-reinstall Screenie and remove SnapText** when any bundle has identifier `com.sohailmohammad.SnapText` or multiple app bundles exist.
 
 ## 3. Test, build, and inspect the app
 
@@ -126,7 +126,7 @@ cd "${SCREENIE_SOURCE_DIR}"
   dist/Screenie.app/Contents/Info.plist
 ```
 
-Require all tests and verification commands to pass. The minimum system version must be `13.0`, the executable architecture must match the Mac, and the display name and executable must be `Screenie`. The bundle identifier remains `com.sohailmohammad.SnapText` so upgrades keep the preference domain and Keychain lookup identity. The build uses an ad-hoc signature because this repository has no Developer ID release. `codesign --verify` should pass; a Gatekeeper assessment can still reject an ad-hoc development build. Do not weaken Gatekeeper in response.
+Require all tests and verification commands to pass. The minimum system version must be `13.0`, the executable architecture must match the Mac, the display name and executable must be `Screenie`, and the bundle identifier must be `com.sohailmohammad.Screenie`. This identity is separate from SnapText's preferences, Keychain item, and TCC records. The build uses an ad-hoc signature because this repository has no Developer ID release. `codesign --verify` should pass; a Gatekeeper assessment can still reject an ad-hoc development build. Do not weaken Gatekeeper in response.
 
 ## 4. Install the built app
 
@@ -174,16 +174,16 @@ Verify only that the Keychain item exists:
 
 ```sh
 /usr/bin/security find-generic-password \
-  -s com.sohailmohammad.SnapText \
+  -s com.sohailmohammad.Screenie \
   -a together-api-key \
   >/dev/null 2>&1
 ```
 
-Report presence or absence. Presence proves that the item exists, not that a newly built app can read it without user approval. Never add `-w` or `-g`; those options can reveal the saved value.
+Report presence or absence. Presence proves that the Screenie item exists, not that a newly built app can read it without user approval. Never add `-w` or `-g`; those options can reveal the saved value.
 
 If a key has already appeared in chat, tell the user to revoke it in the Together dashboard and create a replacement. The replacement goes directly into Screenie's masked field.
 
-The Keychain service intentionally remains `com.sohailmohammad.SnapText` for upgrade lookup. The account remains `together-api-key`. Do not rename, copy, or recreate that item during a Screenie upgrade. Because development builds are ad-hoc signed, macOS can ask the user to approve Screenie's access to an item created by SnapText or an earlier Screenie build.
+The Screenie Keychain service is `com.sohailmohammad.Screenie`; the account is `together-api-key`. Do not copy the legacy SnapText item. A migration starts with a fresh Screenie item entered through the masked field. Because development builds are ad-hoc signed, macOS can ask the user to approve a later Screenie build's access to an item created by an earlier build.
 
 ## 6. Approve Screen Recording and test
 
@@ -240,7 +240,7 @@ Backup retained: <absolute path or none>
 2. Run the strict tests, build, and signature checks from section 3 before touching the installed app.
 3. Copy the new bundle to a unique incoming path under `${HOME}/Applications` and verify that copy.
 4. Ask the user to choose **Quit Screenie** from its menu.
-5. Read `${HOME}/Applications/Screenie.app/Contents/Info.plist` and require `CFBundleIdentifier` to equal `com.sohailmohammad.SnapText`.
+5. Read `${HOME}/Applications/Screenie.app/Contents/Info.plist` and require `CFBundleIdentifier` to equal `com.sohailmohammad.Screenie`.
 6. Move the installed bundle to a unique, timestamped backup under `${HOME}/Applications`.
 7. Move the verified incoming bundle to `${HOME}/Applications/Screenie.app`, verify it again, and open it.
 8. Keep the backup until the user confirms the new app starts. A rebuilt ad-hoc app can ask for Keychain and Screen Recording access again.
@@ -250,37 +250,47 @@ Use an explicit UTC timestamp in incoming and backup names. Before each move, re
 
 If promotion, post-copy verification, or launch fails after the installed app moves to its backup, move the failed target to a unique Trash path. Restore the backup to `${HOME}/Applications/Screenie.app`, verify it, reopen it, and report the failed update.
 
-## Upgrade from SnapText
+## Clean-reinstall Screenie and remove SnapText
 
-Use this path when `${HOME}/Applications/SnapText.app` exists and `${HOME}/Applications/Screenie.app` does not.
+Use this path when permissions are mixed across SnapText, an early `Screenie.app` with the SnapText identifier, or more than one Screenie build. This procedure starts both app identities from clean state.
 
-1. Finish the source update, strict tests, build, and Screenie bundle checks before touching SnapText.
-2. Read the old app's Info.plist and require `CFBundleIdentifier` to equal `com.sohailmohammad.SnapText`.
-3. Ask the user to choose **Quit SnapText** from its menu. Confirm that no `SnapText` process remains.
-4. Move the exact old bundle to a unique, timestamped backup under `${HOME}/Applications`.
-5. Copy the verified `dist/Screenie.app` to a unique incoming path, verify it, and move it to `${HOME}/Applications/Screenie.app`.
-6. Open Screenie and confirm that the legacy Keychain item is present without reading its value. Existing preferences use the retained bundle identifier and should remain available. Do not treat item presence as proof that Screenie can read it.
-7. Tell the user that macOS can request approval when Screenie first reads the old Keychain item. Let the user approve the system prompt. If access is denied, let the user save the key again through Screenie's masked field. If macOS still blocks the update, ask before removing the exact old item in Keychain Access; then let the user enter the key again. Never read or copy the stored value.
-8. Keep the SnapText backup until Screenie starts and the user confirms the menu state. Ask before a paid capture test.
+1. Finish the source update, strict tests, build, and bundle checks. Require the new bundle identifier to equal `com.sohailmohammad.Screenie`.
+2. Copy the verified build to a unique incoming `.app` path under `${HOME}/Applications`, then verify its signature and identifier again. Do not open it.
+3. Inventory every other `SnapText.app` and `Screenie.app`, including backups and build output. Read each Info.plist and classify it by `CFBundleIdentifier`: `com.sohailmohammad.SnapText` is legacy; `com.sohailmohammad.Screenie` is current. Stop on any other identifier.
+4. Confirm that the user can retrieve their Together API key from its source without reading or printing it. Do not migrate either app Keychain item.
+5. Quit every SnapText and Screenie process. Confirm that none remains before moving a bundle.
+6. Register one exact legacy bundle, when present, and the verified incoming bundle with `lsregister -f`. Reset both permission identities before opening the new app, then unregister those exact paths. Do not reset the global LaunchServices database.
 
-An ad-hoc rebuild can require Screen Recording approval again. If Screenie fails to launch or cannot read the existing configuration, move Screenie to a unique Trash path, restore the backup as `${HOME}/Applications/SnapText.app`, verify it, and reopen it.
+   ```sh
+   /usr/bin/tccutil reset All com.sohailmohammad.SnapText
+   /usr/bin/tccutil reset All com.sohailmohammad.Screenie
+   ```
+
+   If no legacy bundle exists and `tccutil` reports that the old identifier is unknown, leave the TCC database untouched and report that result. Never run `tccutil reset All` without a bundle identifier.
+7. Move every inventoried app bundle and backup except the verified incoming bundle to unique paths in `${HOME}/.Trash`. Preserve ordinary screenshots and source checkouts.
+8. With the user's approval, delete both exact preference domains: `com.sohailmohammad.SnapText` and `com.sohailmohammad.Screenie`.
+9. With the user's approval, delete both exact Keychain items. Use account `together-api-key` once with service `com.sohailmohammad.SnapText` and once with service `com.sohailmohammad.Screenie`. Treat an item-not-found result as already clean. Do not delete the source from which the user will retrieve the key.
+10. Move the incoming bundle to `${HOME}/Applications/Screenie.app`, verify it again, register only that path, and open it. After launch succeeds, remove the quarantined app bundles and generated build output so no second runnable bundle remains.
+11. The user must approve the cloud-upload notice, enter the key through Screenie's masked field, and grant Screen Recording permission. Ask before a paid capture test. An ad-hoc rebuild can request Keychain or Screen Recording approval again.
+
+If Screenie fails to launch, move it to a unique Trash path and report the failure. Restoring a removed build also restores its old permission identity, so do not do that during a requested clean reset without the user's direction.
 
 ## Roll back
 
 1. Ask the user to quit Screenie.
 2. Identify the exact timestamped backup selected by the user.
-3. Require the backup's `CFBundleIdentifier` to equal `com.sohailmohammad.SnapText`.
+3. Require the backup's `CFBundleIdentifier` to equal either `com.sohailmohammad.Screenie` or the legacy `com.sohailmohammad.SnapText`.
 4. Move the current `${HOME}/Applications/Screenie.app` to a unique path in `${HOME}/.Trash`.
-5. Read the backup's `CFBundleExecutable`. If it is `Screenie`, restore it as `${HOME}/Applications/Screenie.app`. If it is `SnapText`, restore it as `${HOME}/Applications/SnapText.app`. Stop on any other value.
+5. Read the backup's executable and identifier. Restore any `Screenie` executable as `${HOME}/Applications/Screenie.app`; its identifier can be the current Screenie value or the legacy SnapText value. Restore a `SnapText` executable with the legacy identifier as `${HOME}/Applications/SnapText.app`. Stop on any other pair.
 6. Verify the restored bundle's signature and open that exact path.
 
-The Keychain item and preferences remain in place. macOS can request Screen Recording access again after switching ad-hoc builds. Do not reset the source checkout as part of an app rollback.
+Screenie and SnapText use separate Keychain, preference, and TCC identities. Restoring one app does not restore state deleted from the other identity. macOS can request permission again after switching ad-hoc builds. Do not reset the source checkout as part of an app rollback.
 
 ## Uninstall
 
 1. From the Screenie menu, choose **Remove API Key…** and confirm.
 2. Choose **Quit Screenie**.
-3. Read the installed app's Info.plist and require `CFBundleIdentifier` to equal `com.sohailmohammad.SnapText`.
+3. Read the installed app's Info.plist and require `CFBundleIdentifier` to equal `com.sohailmohammad.Screenie`.
 4. Move the exact installed app and any confirmed backups to unique paths in `${HOME}/.Trash`.
 5. Inventory hidden `.screenie-capture-*` and legacy `.snaptext-capture-*` directories in the configured screenshot folder. Explain that a leftover can contain an unpublished capture. Move only user-approved, exact paths to the Trash.
 6. Leave ordinary screenshots untouched.
@@ -289,15 +299,15 @@ The Keychain item and preferences remain in place. macOS can request Screen Reco
 With separate user approval, remove preferences and reset the app's Screen Recording entry:
 
 ```sh
-/usr/bin/defaults delete com.sohailmohammad.SnapText
-/usr/bin/tccutil reset ScreenCapture com.sohailmohammad.SnapText
+/usr/bin/defaults delete com.sohailmohammad.Screenie
+/usr/bin/tccutil reset All com.sohailmohammad.Screenie
 ```
 
 If the app is already gone and the user asks to remove its saved key, delete only this exact Keychain item:
 
 ```sh
 /usr/bin/security delete-generic-password \
-  -s com.sohailmohammad.SnapText \
+  -s com.sohailmohammad.Screenie \
   -a together-api-key
 ```
 

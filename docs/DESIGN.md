@@ -68,8 +68,8 @@ The capture child runs only `/usr/sbin/screencapture` without a shell. Its envir
 
 The API key stays in macOS Keychain. Screenie does not read existing clipboard contents or retain a request history. HTTPS protects data in transit; Together receives every processed image and applies the account's current retention and privacy settings.
 
-## Upgrade identity
+## App identity
 
-The visible app name, executable, bundle path, and build artifacts are Screenie. The bundle identifier remains `com.sohailmohammad.SnapText`, which is also the Keychain service name. macOS preferences remain under that bundle domain, and Screenie can locate the existing Keychain item without copying the secret.
+Screenie uses `com.sohailmohammad.Screenie` for its bundle identifier, preference domain, and Keychain service. It does not read or migrate the legacy `com.sohailmohammad.SnapText` domains. This keeps Screenie's Screen Recording, preferences, and credential lookup separate from every SnapText build. Replacing SnapText therefore requires fresh cloud consent, API-key entry, and Screen Recording approval.
 
-Development builds use ad-hoc signatures. Their designated requirement changes when the executable changes, so macOS can ask the user to approve Screenie's access to a Keychain item created by SnapText. If access is denied, saving over that item can also fail. With the user's approval, remove only the item whose service is `com.sohailmohammad.SnapText` and account is `together-api-key` in Keychain Access, then enter the key again through Screenie's menu. macOS can also request Screen Recording approval again after a rebuild even when the bundle identifier stays the same.
+Development builds still use ad-hoc signatures. Their designated requirement changes when the executable changes, so rebuilding Screenie can make macOS request Keychain or Screen Recording approval again. A stable Developer ID signature is required for a persistent code identity across public releases.

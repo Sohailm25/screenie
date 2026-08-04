@@ -1,5 +1,5 @@
 import Testing
-@testable import SnapText
+@testable import Screenie
 
 @Suite("Clipboard commit policy")
 struct ClipboardCommitPolicyTests {

@@ -1,6 +1,6 @@
 import Carbon.HIToolbox
 import Testing
-@testable import SnapText
+@testable import Screenie
 
 @Suite("Global capture shortcut")
 struct GlobalHotKeyTests {

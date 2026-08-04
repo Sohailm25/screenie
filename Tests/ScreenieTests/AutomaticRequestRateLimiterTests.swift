@@ -1,6 +1,6 @@
 import Foundation
 import Testing
-@testable import SnapText
+@testable import Screenie
 
 @Suite("Automatic request rate limiter")
 struct AutomaticRequestRateLimiterTests {

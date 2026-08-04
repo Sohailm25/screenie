@@ -905,6 +905,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let field = NSSecureTextField(frame: NSRect(x: 0, y: 0, width: 360, height: 24))
         field.placeholderString = "Paste your Together API key"
         alert.accessoryView = field
+        alert.window.initialFirstResponder = field
 
         NSApp.activate(ignoringOtherApps: true)
         guard alert.runModal() == .alertFirstButtonReturn else { return }

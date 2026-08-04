@@ -32,7 +32,7 @@ jobs:
           test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleDisplayName' dist/Screenie.app/Contents/Info.plist)" = "Screenie"
           test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleName' dist/Screenie.app/Contents/Info.plist)" = "Screenie"
           test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' dist/Screenie.app/Contents/Info.plist)" = "Screenie"
-          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' dist/Screenie.app/Contents/Info.plist)" = "com.sohailmohammad.SnapText"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' dist/Screenie.app/Contents/Info.plist)" = "com.sohailmohammad.Screenie"
           test ! -e dist/SnapText.app
           archive="$(find dist -maxdepth 1 -name 'Screenie-*.zip' -print -quit)"
           test -n "$archive"

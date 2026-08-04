@@ -8,12 +8,12 @@ let package = Package(
         .macOS(.v13)
     ],
     products: [
-        .executable(name: "Screenie", targets: ["SnapText"])
+        .executable(name: "Screenie", targets: ["Screenie"])
     ],
     targets: [
         .executableTarget(
-            name: "SnapText",
-            path: "Sources/SnapText",
+            name: "Screenie",
+            path: "Sources/Screenie",
             linkerSettings: [
                 .linkedFramework("AppKit"),
                 .linkedFramework("Carbon"),
@@ -23,9 +23,9 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "SnapTextTests",
-            dependencies: ["SnapText"],
-            path: "Tests/SnapTextTests"
+            name: "ScreenieTests",
+            dependencies: ["Screenie"],
+            path: "Tests/ScreenieTests"
         )
     ],
     swiftLanguageModes: [.v5]
