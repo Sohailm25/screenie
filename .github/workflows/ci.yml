@@ -27,8 +27,10 @@ jobs:
 
       - name: Verify package
         run: |
-          test -x dist/Screenie.app/Contents/MacOS/Screenie
+          binary="dist/Screenie.app/Contents/MacOS/Screenie"
+          test -x "$binary"
           test -f dist/Screenie.app/Contents/Info.plist
+          test -f dist/Screenie.app/Contents/Resources/LICENSE.txt
           test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleDisplayName' dist/Screenie.app/Contents/Info.plist)" = "Screenie"
           test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleName' dist/Screenie.app/Contents/Info.plist)" = "Screenie"
           test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' dist/Screenie.app/Contents/Info.plist)" = "Screenie"
@@ -37,7 +39,27 @@ jobs:
           archive="$(find dist -maxdepth 1 -name 'Screenie-*.zip' -print -quit)"
           test -n "$archive"
           unzip -tq "$archive"
+          archive_members="$(zipinfo -1 "$archive")"
+          if grep -E '(^|/)__MACOSX(/|$)|(^|/)\._' <<< "$archive_members" >/dev/null; then
+            echo "Archive contains macOS metadata sidecars." >&2
+            exit 1
+          fi
+          package_dir="$(mktemp -d "${RUNNER_TEMP}/screenie-package.XXXXXX")"
+          ditto -x -k "$archive" "$package_dir"
+          packaged_app="$package_dir/Screenie.app"
+          packaged_binary="$packaged_app/Contents/MacOS/Screenie"
+          test -x "$packaged_binary"
+          cmp Resources/Info.plist "$packaged_app/Contents/Info.plist"
+          cmp LICENSE "$packaged_app/Contents/Resources/LICENSE.txt"
+          symbol_text="$(nm -a "$packaged_binary" 2>/dev/null)"
+          binary_text="$(strings -a "$packaged_binary")"
+          if grep -E '[[:space:]](SO|OSO)[[:space:]]' <<< "$symbol_text" >/dev/null ||
+             grep -F "$GITHUB_WORKSPACE" <<< "$binary_text" >/dev/null; then
+            echo "Packaged executable contains compiler source-path data." >&2
+            exit 1
+          fi
           codesign --verify --strict dist/Screenie.app
+          codesign --verify --deep --strict "$packaged_app"
 
       - name: Upload app archive
         uses: actions/upload-artifact@v7
