@@ -1,6 +1,6 @@
 # Screenie
 
-
+<img width="578" height="478" alt="screenie_git" src="https://github.com/user-attachments/assets/3941d38b-9bee-4e10-8430-429cbe8377b4" />
 
 
 Screenie turns any selected Mac screen region into clean, copy-ready Markdown. It preserves text, tables, code, terminal output, math, and interface structure. Charts and diagrams become ASCII art.
