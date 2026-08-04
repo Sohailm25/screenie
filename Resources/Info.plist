@@ -9,7 +9,7 @@
     <key>CFBundleExecutable</key>
     <string>Screenie</string>
     <key>CFBundleIdentifier</key>
-    <string>com.sohailmohammad.SnapText</string>
+    <string>com.sohailmohammad.Screenie</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
@@ -17,13 +17,13 @@
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
-    <string>0.2.0</string>
+    <string>0.3.0</string>
     <key>CFBundleSupportedPlatforms</key>
     <array>
         <string>MacOSX</string>
     </array>
     <key>CFBundleVersion</key>
-    <string>2</string>
+    <string>3</string>
     <key>LSMinimumSystemVersion</key>
     <string>13.0</string>
     <key>LSMultipleInstancesProhibited</key>

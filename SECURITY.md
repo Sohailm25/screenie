@@ -35,7 +35,7 @@ Screenie checks the clipboard change counter before writing, which avoids the co
 
 ## Distribution
 
-The repository build script applies an ad-hoc signature and labels the zip with the build Mac’s architecture. That signature lets macOS validate the bundle's internal code, but it does not identify the publisher and it does not notarize the app. GitHub CI artifacts are development builds.
+The repository build script applies an ad-hoc signature and labels the zip with the build Mac’s architecture. That signature lets macOS validate the bundle's internal code, but it does not identify the publisher and it does not notarize the app. GitHub CI artifacts are development builds. Screenie uses `com.sohailmohammad.Screenie`; it does not share SnapText's bundle identity, preferences, Keychain service, or TCC records.
 
 Release maintainers should sign the app with a stable Developer ID certificate, enable hardened runtime settings appropriate for the final bundle, notarize the archive with Apple, and publish checksums with each release. Screen Recording approval is tied to code identity, so rebuilding an ad-hoc signed app can make macOS ask for permission again. Users of an unnotarized build should inspect the source and build it locally.
 

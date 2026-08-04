@@ -1,7 +1,7 @@
 import Darwin
 import Foundation
 import Testing
-@testable import SnapText
+@testable import Screenie
 
 @Suite("Interactive screenshot capture", .serialized)
 struct InteractiveScreenshotCapturerTests {

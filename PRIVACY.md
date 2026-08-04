@@ -33,6 +33,8 @@ Screenie stores:
 - The selected model, monitoring state, upload-consent version, and screenshot folder preference in macOS app preferences
 - A folder security bookmark when macOS requires one
 
+The bundle identifier, preference domain, and Keychain service are `com.sohailmohammad.Screenie`. Screenie does not read the legacy SnapText domains.
+
 For a screenshot detected by folder monitoring, macOS saves the original in the configured folder. Screenie does not delete, move, rename, or edit that file.
 
 For Command-Option-4, Screenie creates a hidden staging directory with owner-only permissions inside the screenshot folder. It asks Apple’s capture tool to write one PNG there, then moves the PNG to a unique visible filename. Cleanup is best-effort. A cleanup error, force-quit, Mac shutdown, or quit during an active selector can leave the hidden directory and PNG behind. If the move to a visible name fails, Screenie keeps the staged PNG and reports its path.
@@ -47,7 +49,7 @@ Build tools, macOS, Together AI, or a distributor can have separate logging and 
 
 ## Clipboard access
 
-Screenie reads the clipboard change counter before inference. It writes the transcription only if the clipboard has not changed during the request. The app does not send existing clipboard contents to Together.
+Screenie reads the clipboard change counter before inference. It writes the transcription only if the clipboard has not changed during the request. The app does not send existing clipboard contents to Together. A user-initiated Paste in the masked API-key field inserts that value into the field so Screenie can save it to Keychain.
 
 Apple’s interactive selector sends a screenshot to the clipboard when Control is held during selection. In that case no output file is created, Screenie makes no Together request, and the Apple-produced image remains on the clipboard. Screenie reports that the clipboard changed.
 

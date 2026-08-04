@@ -1,5 +1,5 @@
 import Testing
-@testable import SnapText
+@testable import Screenie
 
 @Suite("Transcription output normalizer")
 struct TranscriptionOutputNormalizerTests {

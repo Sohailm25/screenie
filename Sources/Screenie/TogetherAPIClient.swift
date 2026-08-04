@@ -17,7 +17,7 @@ enum TogetherAPIError: LocalizedError, Equatable {
         case .emptyResponse:
             return "The model returned no text."
         case .outputTruncated:
-            return "The transcription reached Screenie’s \(AppConfiguration.maximumOutputTokens)-token output cap. Capture a smaller region."
+            return "Together returned a token-limited transcription. Capture a smaller region."
         case let .incompleteResponse(reason):
             if let reason, !reason.isEmpty {
                 return "Together ended the transcription with finish reason \(reason). The clipboard was left unchanged."
@@ -134,7 +134,6 @@ actor TogetherAPIClient {
                 )
             ],
             temperature: 0,
-            maximumTokens: AppConfiguration.maximumOutputTokens,
             numberOfChoices: 1,
             reasoning: model == .fast ? Reasoning(enabled: false) : nil,
             chatTemplateArguments: model == .fast
@@ -216,7 +215,6 @@ private struct ChatRequest: Encodable {
     let model: String
     let messages: [ChatMessage]
     let temperature: Double
-    let maximumTokens: Int
     let numberOfChoices: Int
     let reasoning: Reasoning?
     let chatTemplateArguments: ChatTemplateArguments?
@@ -225,7 +223,6 @@ private struct ChatRequest: Encodable {
         case model
         case messages
         case temperature
-        case maximumTokens = "max_tokens"
         case numberOfChoices = "n"
         case reasoning
         case chatTemplateArguments = "chat_template_kwargs"
