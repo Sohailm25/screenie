@@ -147,6 +147,8 @@ struct InteractiveScreenshotCapturerTests {
         #expect(second.deletingLastPathComponent() == directory)
         #expect(first.pathExtension == "png")
         #expect(second.pathExtension == "png")
+        #expect(first.lastPathComponent.hasPrefix("Screenie "))
+        #expect(second.lastPathComponent.hasPrefix("Screenie "))
         #expect(first != second)
         #expect(!FileManager.default.fileExists(atPath: first.path))
         #expect(!FileManager.default.fileExists(atPath: second.path))
@@ -164,7 +166,7 @@ struct InteractiveScreenshotCapturerTests {
         )
 
         #expect(workspace.directoryURL.deletingLastPathComponent() == directory)
-        #expect(workspace.directoryURL.lastPathComponent.hasPrefix(".snaptext-capture-"))
+        #expect(workspace.directoryURL.lastPathComponent.hasPrefix(".screenie-capture-"))
         #expect(workspace.captureURL.deletingLastPathComponent() == workspace.directoryURL)
         var information = stat()
         #expect(lstat(workspace.directoryURL.path, &information) == 0)

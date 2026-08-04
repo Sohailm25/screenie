@@ -21,13 +21,13 @@ enum ScreenshotImageLoadError: LocalizedError {
         case .unreadable:
             return "The screenshot image could not be read."
         case .changedBeforeRead:
-            return "The screenshot changed before SnapText could read it."
+            return "The screenshot changed before Screenie could read it."
         case .missingSelectionMetadata:
             return "The detected file no longer has Apple selection-screenshot metadata."
         case .fileTooLarge:
-            return "The image exceeds SnapText’s 16 MiB safety cap."
+            return "The image exceeds Screenie’s 16 MiB safety cap."
         case .dimensionsTooLarge:
-            return "The image exceeds SnapText’s 64-megapixel or 16,384-pixel-side safety cap."
+            return "The image exceeds Screenie’s 64-megapixel or 16,384-pixel-side safety cap."
         case .conversionFailed:
             return "The screenshot image could not be converted to PNG."
         }

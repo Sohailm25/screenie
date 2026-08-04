@@ -124,7 +124,7 @@ enum ScreenshotWatcherError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case let .cannotOpenFolder(url):
-            return "SnapText could not watch the screenshot folder: \(url.path)"
+            return "Screenie could not watch the screenshot folder: \(url.path)"
         case let .folderBecameUnavailable(url):
             return "The watched screenshot folder moved or became unavailable: \(url.path)"
         }
@@ -164,7 +164,7 @@ final class ScreenshotWatcher: @unchecked Sendable {
     typealias ScreenshotHandler = (DetectedScreenshot) -> Void
     typealias FailureHandler = (Error) -> Void
 
-    private let queue = DispatchQueue(label: "com.sohailmohammad.SnapText.screenshot-watcher")
+    private let queue = DispatchQueue(label: "com.sohailmohammad.Screenie.screenshot-watcher")
     private let queueKey = DispatchSpecificKey<Void>()
     private let fileManager: FileManager
     private var source: DispatchSourceFileSystemObject?

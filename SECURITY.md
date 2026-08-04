@@ -19,19 +19,19 @@ Public issues are appropriate for bugs that do not expose private data, credenti
 
 ## Sensitive components
 
-SnapText handles three sensitive values:
+Screenie handles three sensitive values:
 
 - Screenshot files can contain credentials, customer data, private messages, or source code.
 - The Together API key authorizes paid inference requests.
 - Model responses can contain text copied from the screenshot.
 
-The app stores the API key in the macOS Keychain. Screenshot data and the API key travel to Together over HTTPS for inference and authentication. SnapText does not persist a response history or a second copy of the screenshot.
+The app stores the API key in the macOS Keychain. Screenshot data and the API key travel to Together over HTTPS for inference and authentication. Screenie does not persist a response history or a second copy of the screenshot.
 
-Command-Option-4 launches the fixed executable `/usr/sbin/screencapture` with a fixed argument shape and an exact generated output path. SnapText does not invoke a shell, search `PATH`, run AppleScript, or pass its own environment to the child. The child environment contains only `LANG` and `PATH`, so it does not inherit `TOGETHER_API_KEY` or other shell secrets.
+Command-Option-4 launches the fixed executable `/usr/sbin/screencapture` with a fixed argument shape and an exact generated output path. Screenie does not invoke a shell, search `PATH`, run AppleScript, or pass its own environment to the child. The child environment contains only `LANG` and `PATH`, so it does not inherit `TOGETHER_API_KEY` or other shell secrets.
 
-Direct captures start in a generated hidden directory with owner-only permissions. SnapText verifies that the output is a nonempty regular file, records its device and inode, and moves it to a unique visible PNG path without overwriting an existing file. The image loader opens the published path without following symbolic links and checks that the identity still matches before upload.
+Direct captures start in a generated hidden directory with owner-only permissions. Screenie verifies that the output is a nonempty regular file, records its device and inode, and moves it to a unique visible PNG path without overwriting an existing file. The image loader opens the published path without following symbolic links and checks that the identity still matches before upload.
 
-SnapText checks the clipboard change counter before writing, which avoids the common case where a completed request replaces text that you copied while waiting. AppKit exposes comparison and writing as separate operations, so another process can still change the clipboard between SnapText's final check and write. The check also does not prevent another process with clipboard access from reading the final transcription.
+Screenie checks the clipboard change counter before writing, which avoids the common case where a completed request replaces text that you copied while waiting. AppKit exposes comparison and writing as separate operations, so another process can still change the clipboard between Screenie's final check and write. The check also does not prevent another process with clipboard access from reading the final transcription.
 
 ## Distribution
 

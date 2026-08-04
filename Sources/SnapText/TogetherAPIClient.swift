@@ -17,7 +17,7 @@ enum TogetherAPIError: LocalizedError, Equatable {
         case .emptyResponse:
             return "The model returned no text."
         case .outputTruncated:
-            return "The transcription reached SnapText’s \(AppConfiguration.maximumOutputTokens)-token output cap. Capture a smaller region."
+            return "The transcription reached Screenie’s \(AppConfiguration.maximumOutputTokens)-token output cap. Capture a smaller region."
         case let .incompleteResponse(reason):
             if let reason, !reason.isEmpty {
                 return "Together ended the transcription with finish reason \(reason). The clipboard was left unchanged."
