@@ -4,7 +4,7 @@ import Testing
 
 @Suite("Together API client")
 struct TogetherAPIClientTests {
-    @Test("Fast request encodes the vision model and low-latency options")
+    @Test("Fast request encodes low-latency options without an output cap")
     func makeRequestEncodesFastVisionRequest() throws {
         let endpoint = try #require(URL(string: "https://example.test/v1/chat/completions"))
         let imageData = Data([0x89, 0x50, 0x4E, 0x47])
@@ -28,7 +28,7 @@ struct TogetherAPIClientTests {
         #expect(body["model"] as? String == VisionModel.fast.rawValue)
         #expect(body["model"] as? String == "Qwen/Qwen3.5-9B")
         #expect(body["temperature"] as? Double == 0)
-        #expect(body["max_tokens"] as? Int == AppConfiguration.maximumOutputTokens)
+        #expect(body["max_tokens"] == nil)
         #expect(body["n"] as? Int == 1)
 
         let reasoning = try #require(body["reasoning"] as? [String: Any])
@@ -72,6 +72,7 @@ struct TogetherAPIClientTests {
         )
 
         #expect(body["model"] as? String == VisionModel.accurate.rawValue)
+        #expect(body["max_tokens"] == nil)
         #expect(body["reasoning"] == nil)
         #expect(body["chat_template_kwargs"] == nil)
     }

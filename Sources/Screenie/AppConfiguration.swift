@@ -6,7 +6,6 @@ enum AppConfiguration {
     static let apiEndpoint = URL(string: "https://api.together.xyz/v1/chat/completions")!
     static let keychainService = bundleIdentifier
     static let keychainAccount = "together-api-key"
-    static let maximumOutputTokens = 3_072
     static let maximumASCIIChartCharactersPerLine = 72
     static let maximumASCIIChartLines = 20
     static let maximumTotalASCIILines = 60
